@@ -42,18 +42,21 @@ def calc_histogram():
 
 	histogram.fill(0)
 
-	depth_map = depth_generator.get_raw_depth_map()
-	depth = numpy.fromstring(depth_map, dtype=numpy.uint8)
-	n = len(depth)
-	x = numpy.zeros(n/2)
+	depth_map = depth_generator.map.data
+	print depth_map
 
-	for index in xrange(0, n, 2):
-		i = 0
-		try:
-			i = int("%c%c" % (depth_map[index], depth_map[index+1]))
-		except: pass
-		finally:
-			numpy.append(x, i)
+	# depth_map = depth_generator.get_raw_depth_map()
+	# depth = numpy.fromstring(depth_map, dtype=numpy.uint8)
+	# n = len(depth)
+	# x = numpy.zeros(n/2)
+
+	# for index in xrange(0, n, 2):
+	# 	i = 0
+	# 	try:
+	# 		i = int("%c%c" % (depth_map[index], depth_map[index+1]))
+	# 	except: pass
+	# 	finally:
+	# 		numpy.append(x, i)
 	# for
 
 	# for index in xrange(0, length):
