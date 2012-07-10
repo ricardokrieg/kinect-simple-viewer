@@ -6,3 +6,5 @@ Uses:
 	- PyOpenNI
 	- Pygame
 	- Numpy
+
+The performance isn't so good yet, due the mapping of depths in grayscale.
