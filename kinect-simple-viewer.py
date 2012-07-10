@@ -40,58 +40,32 @@ def calc_histogram():
 	max_depth = 0
 	num_points = 0
 
-	histogram.fill(0)
+	depth_map = numpy.asarray(depth_generator.get_tuple_depth_map())
+	depth_map = depth_map[depth_map != 0]
+	depth_map = depth_map[depth_map < MAX_DEPTH_SIZE]
 
-	depth_map = depth_generator.map.data
-	print depth_map
+	max_depth = min(depth_map.max(), MAX_DEPTH_SIZE)
 
-	# depth_map = depth_generator.get_raw_depth_map()
-	# depth = numpy.fromstring(depth_map, dtype=numpy.uint8)
-	# n = len(depth)
-	# x = numpy.zeros(n/2)
-
-	# for index in xrange(0, n, 2):
-	# 	i = 0
-	# 	try:
-	# 		i = int("%c%c" % (depth_map[index], depth_map[index+1]))
-	# 	except: pass
-	# 	finally:
-	# 		numpy.append(x, i)
-	# for
-
-	# for index in xrange(0, length):
-
-	# 	max_depth = min(max(max_depth, depth), MAX_DEPTH_SIZE)
-
-	# 	if depth != 0 and depth < MAX_DEPTH_SIZE:
-	# 		histogram[depth] += 1
-	# 		num_points += 1
-	# 	# if
-	# # for
+	histogram = numpy.bincount(depth_map)
+	num_points = len(depth_map)
 
 	for i in xrange(1, max_depth): histogram[i] += histogram[i-1]
 
 	if num_points > 0:
-		for i in xrange(1, max_depth):
-			histogram[i] = int(256 * (1.0-(histogram[i] / float(num_points))))
-	# if
+		histogram = 256 * (1.0-(histogram / float(num_points)))
 # calc_histogram
 
 def update_depth_image(surface):
 	calc_histogram()
 
-	depth_frame = numpy.empty((depth_generator.metadata.res), numpy.uint8)
-	depth_frame.shape = depth_generator.metadata.res
+	depth_frame = numpy.arange(640*480, dtype=numpy.uint32)
+	depth_map = numpy.asarray(depth_generator.get_tuple_depth_map())
+	depth_frame = histogram[depth_map[depth_frame]]
+	depth_frame = depth_frame.reshape(480, 640)
 
-	# for x in xrange(0, 640):
-	# 	for y in xrange(0, 480):
-	# 		depth = depth_generator.map[x, y]
-
-	# 		depth_frame[x][y] = histogram[depth]
-		# for
-	# for
-
-	surface.blit(pygame.surfarray.make_surface(depth_frame), (0, 0))
+	frame_surface = pygame.transform.rotate(pygame.transform.flip(pygame.surfarray.make_surface(depth_frame), True, False), 90)
+	frame_surface.set_palette(tuple([(i, i, i) for i in range(256)]))
+	surface.blit(frame_surface, (0, 0))
 # update_depth_image
 
 def capture_rgb():
