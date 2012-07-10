@@ -7,7 +7,6 @@ from openni import *
 import numpy
 import cv
 import sys
-from inspect import getmembers
 
 XML_FILE = 'config.xml'
 MAX_DEPTH_SIZE = 10000
