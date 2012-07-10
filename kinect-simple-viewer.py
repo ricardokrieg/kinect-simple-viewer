@@ -61,7 +61,7 @@ def update_depth_image(surface):
 
 	depth_frame = numpy.arange(640*480, dtype=numpy.uint32)
 	depth_frame = histogram[depth_map[depth_frame]]
-	depth_frame = depth_frame.reshape(480, 640)
+	depth_frame = depth_frame.reshape(depth_generator.metadata.res[1], depth_generator.metadata.res[0])
 
 	frame_surface = pygame.transform.rotate(pygame.transform.flip(pygame.surfarray.make_surface(depth_frame), True, False), 90)
 	frame_surface.set_palette(tuple([(i, i, i) for i in range(256)]))
