@@ -1,7 +1,7 @@
-kinect-simple-viewer
+Kinect Simple Viewer
 ====================
 
-Draw the RGB Image and the Grayscale Depth Image from kinect.
+Draws the RGB Image and the Grayscale Depth Image from kinect.
 Uses:
 	- PyOpenNI
 	- Pygame
