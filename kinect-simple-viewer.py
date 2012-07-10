@@ -29,25 +29,26 @@ depth_frame = pygame.Surface((640, 480))
 pygame.display.set_caption('Kinect Simple Viewer')
 
 running = True
-histogram = numpy.zeros(MAX_DEPTH_SIZE, dtype=int)
+histogram = None
+depth_map = None
 image_count = 0
 total_time = 0
 
 print "Image dimensions ({full_res[0]}, {full_res[1]})".format(full_res=depth_generator.metadata.full_res)
 
 def calc_histogram():
-	global histogram
+	global histogram, depth_map
 	max_depth = 0
 	num_points = 0
 
 	depth_map = numpy.asarray(depth_generator.get_tuple_depth_map())
-	depth_map = depth_map[depth_map != 0]
-	depth_map = depth_map[depth_map < MAX_DEPTH_SIZE]
+	reduced_depth_map = depth_map[depth_map != 0]
+	reduced_depth_map = reduced_depth_map[reduced_depth_map < MAX_DEPTH_SIZE]
 
-	max_depth = min(depth_map.max(), MAX_DEPTH_SIZE)
+	max_depth = min(reduced_depth_map.max(), MAX_DEPTH_SIZE)
 
-	histogram = numpy.bincount(depth_map)
-	num_points = len(depth_map)
+	histogram = numpy.bincount(reduced_depth_map)
+	num_points = len(reduced_depth_map)
 
 	for i in xrange(1, max_depth): histogram[i] += histogram[i-1]
 
@@ -59,7 +60,6 @@ def update_depth_image(surface):
 	calc_histogram()
 
 	depth_frame = numpy.arange(640*480, dtype=numpy.uint32)
-	depth_map = numpy.asarray(depth_generator.get_tuple_depth_map())
 	depth_frame = histogram[depth_map[depth_frame]]
 	depth_frame = depth_frame.reshape(480, 640)
 
