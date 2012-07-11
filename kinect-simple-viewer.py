@@ -23,8 +23,12 @@ image_generator.create(context)
 context.start_generating_all()
 
 pygame.init()
+
 screen = pygame.display.set_mode((1280, 480))
 depth_frame = pygame.Surface((640, 480))
+
+grayscale_palette = tuple([(i, i, i) for i in range(256)])
+
 pygame.display.set_caption('Kinect Simple Viewer')
 
 running = True
@@ -63,7 +67,7 @@ def update_depth_image(surface):
 	depth_frame = depth_frame.reshape(480, 640)
 
 	frame_surface = pygame.transform.rotate(pygame.transform.flip(pygame.surfarray.make_surface(depth_frame), True, False), 90)
-	frame_surface.set_palette(tuple([(i, i, i) for i in range(256)]))
+	frame_surface.set_palette(grayscale_palette)
 	surface.blit(frame_surface, (0, 0))
 # update_depth_image
 
